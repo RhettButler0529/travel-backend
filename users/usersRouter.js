@@ -1,6 +1,6 @@
 const express = require("express");
 const Users = require("./usersModel.js");
-const bcrypt = require("bcryptjs");
+
 
 // Creates router for specific API route for import in server.js
 const router = express.Router();
