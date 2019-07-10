@@ -5,7 +5,7 @@ const pg = require("pg");
 pg.defaults.ssl = true;
 
 // Production database connection
-const dbConnection = process.env.DATABASE_URL || localPgConnection;
+const dbConnection = process.env.DATABASE_URL || "development"
 
 // Postgres configurations
 // Command for running postgres locally:
@@ -59,5 +59,24 @@ module.exports = {
       directory: "./database/seeds"
     },
     useNullAsDefault: true
+  },
+
+  staging: {
+    client: "pg",
+    connection: dbConnection,
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      directory: "./database/migrations",
+      tableName: "knex_migrations"
+    },
+    seeds: {
+      directory: "./database/seeds"
+    },
+    useNullAsDefault: true
   }
+
+
 };
