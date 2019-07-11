@@ -27,6 +27,8 @@
     "knex": "^0.16.5",
     "knex-cleaner": "^1.1.4",
     "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^2.0.0",
     "pg": "^7.10.0"
   },
   "devDependencies": {
