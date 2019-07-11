@@ -52,6 +52,10 @@ router.get("/:id", async (req, res) => {
 router.get('/auth/login', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => {
   // If this function gets called, authentication was successful
   // `req.user` contains authenticated user
+});
+
+router.get('/auth/callback/google', passport.authenticate('google'), (req, res) => {
+  console.log("USER:", req.user);
   res.json(req.user);
 });
 

@@ -9,6 +9,7 @@ module.exports = passport => {
 
   passport.deserializeUser(async (id, done) => {
     // TODO: This needs to be tested
+    console.log(id);
     const user = await User.findById(id);
     if (!user) {
       done('error', user);
@@ -18,12 +19,13 @@ module.exports = passport => {
   passport.use(new GoogleStrategy(auth.google, (token, refreshToken, profile, done) => {
     process.nextTick(async () => {
       const { id, displayName: name, emails } = profile;
+      console.log('AUTH:', id);
 
       // TODO: This needs to be tested with the Knex db model
       const user = await User.findById(profile.id);
-      if (!user) {
-        return done('error');
-      }
+      // if (!user) {
+      //   return done('error');
+      // }
 
       if (user) {
         return done(null, user);
