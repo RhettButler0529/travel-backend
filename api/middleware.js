@@ -9,3 +9,8 @@ module.exports = server => {
   server.use(cors());
   server.use(morgan("dev"));
 };
+
+function decode() {
+  const token = req.header.authorization
+  console.log(token)
+}

@@ -1,6 +1,6 @@
 // Import dependencies and general middleware
 const express = require("express");
-const passport = require('passport');
+const cors = require("cors");
 const configureMiddleware = require("./middleware.js");
 const server = express();
 
@@ -18,10 +18,13 @@ server.use(passport.session());
 // Import various split API routes
 const usersRouter = require("../users/usersRouter.js");
 // const authRouter = require("../auth/authRouter.js");
-
 // Router assignments
 server.use("/api/users", usersRouter);
 // server.use("/api/auth", authRouter);
+server.post("/test", (req, res) => {
+  console.log('req.headers',req.headers)
+  res.send(req.headers.authorization)
+})
 
 // Generic / route for initial server online status check
 const projectName = process.env.PROJECT_NAME || "test";
