@@ -2,6 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
+
 // TODO: Add passport here
 module.exports = server => {
   server.use(helmet());
