@@ -29,3 +29,6 @@ server.get("/", (req, res) => {
 
 // Server export to be used in index.js
 module.exports = server;
+
+// Login sign-up post
+// middleware checking the token
