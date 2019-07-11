@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require('passport');
 const Users = require("./usersModel.js");
 
 // Creates router for specific API route for import in server.js
@@ -48,7 +49,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post('/auth/login' passport.authenticate('google'), (req, res) => {
+router.get('/auth/login', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => {
   // If this function gets called, authentication was successful
   // `req.user` contains authenticated user
   res.json(req.user);

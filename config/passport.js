@@ -1,5 +1,5 @@
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const User = require("./userModel.js");
+const User = require("../users/userModel.js");
 const auth = require('./auth.js');
 
 module.exports = passport => {

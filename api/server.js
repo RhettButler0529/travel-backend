@@ -1,10 +1,16 @@
 // Import dependencies and general middleware
 const express = require("express");
+const passport = require('passport');
 const configureMiddleware = require("./middleware.js");
 const server = express();
 
 // Pass server through middleware file
 configureMiddleware(server);
+
+require('../config/passport')(passport);
+
+server.use(passport.initialize());
+server.use(passport.session());
 
 // Custom restricted middleware import
 // const restricted = require("../auth/restricted.js");
