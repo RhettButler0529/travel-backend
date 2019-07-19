@@ -1,14 +1,16 @@
 const express = require("express");
 const passport = require('passport');
-const Users = require("./usersModel.js");
+const User = require("./userModel.js");
+const decodeToken = require('../api/auth/token');
 
 // Creates router for specific API route for import in server.js
 const router = express.Router();
 
 // Get all users request
-router.get("/", async (req, res) => {
+router.get("/", decodeToken, async (req, res) => {
   try {
-    const users = await Users.find().select("id", "username");
+    const users = await User.find().select("id", "name");
+    console.log("Users:  ", users);
     if (users.length) {
       res.status(200).json({
         message: "The users were found in the database",
@@ -30,7 +32,7 @@ router.get("/", async (req, res) => {
 // Get users by id request
 router.get("/:id", async (req, res) => {
   try {
-    const user = await Users.findById(req.params.id).select("id", "username");
+    const user = await User.findById(req.params.id).select("id", "name");
     if (user) {
       res.status(200).json({
         message: "The user was retrieved successfully.",
@@ -94,9 +96,9 @@ router.put("/:id", async (req, res) => {
     const newUserInfo = req.body;
     const hash = bcrypt.hashSync(newUserInfo.password, 14);
     newUserInfo.password = hash;
-    const user = await Users.update(req.params.id, newUserInfo);
+    const user = await User.update(req.params.id, newUserInfo);
     if (user) {
-      const users = await Users.find().where({
+      const users = await User.find().where({
         username: newUserInfo.username
       });
       res.status(200).json({
@@ -120,7 +122,7 @@ router.put("/:id", async (req, res) => {
 // Delete indiviudal user request
 router.delete("/:id", async (req, res) => {
   try {
-    const deletedUser = await Users.remove(req.params.id);
+    const deletedUser = await User.remove(req.params.id);
     if (deletedUser) {
       res.status(200).json({
         message: "User was deleted successfully.",
