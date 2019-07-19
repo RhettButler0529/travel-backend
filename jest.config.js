@@ -46,7 +46,7 @@ module.exports = {
   // dependencyExtractor: null,
 
   // A display name to be printed alongside the test while it is running
-  displayName: "Express-REST-Postgres",
+  displayName: 'Express-REST-Postgres',
 
   // Make calling deprecated APIs throw helpful error messages
   // errorOnDeprecated: false,
@@ -132,7 +132,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -184,5 +184,5 @@ module.exports = {
   // watchPathIgnorePatterns: [],
 
   // Whether to use watchman for file crawling
-  watchman: true
+  watchman: true,
 };

@@ -1,8 +1,9 @@
 // Import dependencies and general middleware
-const express = require("express");
-const configureMiddleware = require("./middleware.js");
+const express = require('express');
+const configureMiddleware = require('./middleware.js');
+
 const server = express();
-const decodeToken = require("./auth/token.js");
+const decodeToken = require('./auth/token.js');
 const authorize = require('./auth/login.js');
 
 // Pass server through middleware file
@@ -14,11 +15,11 @@ configureMiddleware(server);
 // const restricted = require("../auth/restricted.js");
 
 // Import various split API routes
-const usersRouter = require("../users/usersRouter.js");
+const usersRouter = require('../users/usersRouter.js');
 // const authRouter = require("../auth/authRouter.js");
 // Router assignments
-server.use("/api/users", usersRouter);
-server.post("/api/auth", decodeToken, authorize, (req, res) => {
+server.use('/api/users', usersRouter);
+server.post('/api/auth', decodeToken, authorize, (req, res) => {
   // id, token, email, name
   // console.log("req.headers.authorization", req.headers.authorization);
   // console.log("res.googleId", res.googleId);
@@ -28,8 +29,8 @@ server.post("/api/auth", decodeToken, authorize, (req, res) => {
 });
 
 // Generic / route for initial server online status check
-const projectName = process.env.PROJECT_NAME || "test";
-server.get("/", (req, res) => {
+const projectName = process.env.PROJECT_NAME || 'test';
+server.get('/', (req, res) => {
   res.send(`The ${projectName} server is up and running!`);
 });
 
