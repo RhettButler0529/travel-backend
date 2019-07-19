@@ -1,6 +1,6 @@
 const express = require("express");
+const passport = require('passport');
 const Users = require("./usersModel.js");
-
 
 // Creates router for specific API route for import in server.js
 const router = express.Router();
@@ -47,6 +47,16 @@ router.get("/:id", async (req, res) => {
       error
     });
   }
+});
+
+router.get('/auth/login', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => {
+  // If this function gets called, authentication was successful
+  // `req.user` contains authenticated user
+});
+
+router.get('/auth/callback/google', passport.authenticate('google'), (req, res) => {
+  console.log("USER:", req.user);
+  res.json(req.user);
 });
 
 // Create user request is a duplicate of register but is here in case it's needed

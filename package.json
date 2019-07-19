@@ -27,12 +27,14 @@
     "knex": "^0.16.5",
     "knex-cleaner": "^1.1.4",
     "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^2.0.0",
     "pg": "^7.10.0"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
     "jest": "^24.8.0",
-    "nodemon": "^1.19.0",
+    "nodemon": "^1.19.1",
     "supertest": "^4.0.2"
   }
 }
