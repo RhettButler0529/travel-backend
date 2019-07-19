@@ -1,11 +1,5 @@
-
-
-exports.seed = function(knex, Promise) {
-  return knex("users")
-    .truncate()
-    .then(function() {
-      return knex("users").insert([
-        { username: "admin" }
-      ]);
-    });
-};
+exports.seed = knex => knex('users')
+  .truncate()
+  .then(() => knex('users').insert([
+    { username: 'admin' },
+  ]));

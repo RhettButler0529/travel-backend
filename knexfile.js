@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('dotenv').config();
 
 // Postgres imports
 // const pg = require("pg");
@@ -18,72 +18,72 @@ const tables = {
 
 module.exports = {
   development: {
-    client: "pg",
+    client: 'pg',
     connection: `${dbConnection}/${tables.dev}`,
     migrations: {
-      directory: "./database/migrations",
-      tableName: "knex_migrations"
+      directory: './database/migrations',
+      tableName: 'knex_migrations',
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     seeds: {
-      directory: "./database/seeds"
+      directory: './database/seeds',
     },
-    useNullAsDefault: true
+    useNullAsDefault: true,
   },
 
   testing: {
-    client: "pg",
+    client: 'pg',
     connection: `${dbConnection}/${tables.test}`,
     migrations: {
-      directory: "./database/migrations",
-      tableName: "knex_migrations"
+      directory: './database/migrations',
+      tableName: 'knex_migrations',
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     seeds: {
-      directory: "./database/seeds"
+      directory: './database/seeds',
     },
-    useNullAsDefault: true
+    useNullAsDefault: true,
   },
 
   production: {
-    client: "pg",
+    client: 'pg',
     connection: `${dbConnection}?ssl=true`,
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      directory: "./database/migrations",
-      tableName: "knex_migrations"
+      directory: './database/migrations',
+      tableName: 'knex_migrations',
     },
     seeds: {
-      directory: "./database/seeds"
+      directory: './database/seeds',
     },
-    useNullAsDefault: true
+    useNullAsDefault: true,
   },
 
   staging: {
-    client: "pg",
+    client: 'pg',
     connection: `${dbConnection}?ssl=true`,
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      directory: "./database/migrations",
-      tableName: "knex_migrations"
+      directory: './database/migrations',
+      tableName: 'knex_migrations',
     },
     seeds: {
-      directory: "./database/seeds"
+      directory: './database/seeds',
     },
-    useNullAsDefault: true
-  }
+    useNullAsDefault: true,
+  },
 
 
 };
