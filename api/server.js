@@ -1,5 +1,9 @@
 // Import dependencies and general middleware
 const express = require('express');
+const googleMapsClient = require('@google/maps').createClient({
+  key: process.env.PLACES_API_KEY,
+  Promise,
+});
 const configureMiddleware = require('./middleware.js');
 
 const server = express();
@@ -26,6 +30,34 @@ server.post('/api/auth', decodeToken, authorize, (req, res) => {
   res.json({
     message: 'success auth',
   });
+});
+
+/*
+  data.json.results
+*/
+server.get('/a', async (req, res) => {
+  try {
+    const { data } = await googleMapsClient.places({
+      query: 'fast food',
+      language: 'en',
+      location: [-33.865, 151.038],
+      radius: 5000,
+      minprice: 1,
+      maxprice: 4,
+      opennow: true,
+      type: 'restaurant',
+    }).asPromise();
+
+    // parse data and cache to db if needed
+
+    res.send({
+      status: 'success',
+      data,
+    });
+  } catch (error) {
+    console.log(error); //eslint-disable-line
+    res.send(error);
+  }
 });
 
 // Generic / route for initial server online status check
