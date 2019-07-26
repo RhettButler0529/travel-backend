@@ -68,8 +68,6 @@ server.get('/a/:placeid', async (req, res) => {
       language: 'en',
     }).asPromise();
 
-    console.log(data);
-
     res.json({
       status: 'success',
       data,
@@ -81,7 +79,7 @@ server.get('/a/:placeid', async (req, res) => {
       error,
     });
   }
-})
+});
 
 // Generic / route for initial server online status check
 const projectName = process.env.PROJECT_NAME || 'test';
