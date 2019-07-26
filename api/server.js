@@ -1,5 +1,9 @@
 // Import dependencies and general middleware
 const express = require('express');
+const googleMapsClient = require('@google/maps').createClient({
+  key: process.env.PLACES_API_KEY,
+  Promise,
+});
 const configureMiddleware = require('./middleware.js');
 
 const server = express();
@@ -26,6 +30,81 @@ server.post('/api/auth', decodeToken, authorize, (req, res) => {
   res.json({
     message: 'success auth',
   });
+});
+
+
+server.get('/a', async (req, res) => {
+  try {
+    // gets a results array of places objects
+    // query.q should be a city e.g. San Francisco
+    const { json: { results: city } } = await googleMapsClient.places({
+      query: req.query.q,
+      language: 'en',
+    }).asPromise();
+
+    const { geometry: { location } } = city[0];
+
+    const { json: { results } } = await googleMapsClient.places({
+      query: 'stuff to do',
+      location: Object.values(location),
+      language: 'en',
+    }).asPromise();
+
+    const places = await Promise.all(results.filter(({ photos }) => photos).map(async ({
+      name,
+      place_id: placeId,
+      price_level: price,
+      photos,
+      rating,
+      types,
+    }) => {
+      const picRef = photos[0].photo_reference;
+      const pictureReq = await googleMapsClient.placesPhoto({
+        photoreference: picRef,
+        maxwidth: 400,
+      }).asPromise();
+      const picture = `https://${pictureReq.req.socket.servername}${pictureReq.req.path}`;
+
+      return {
+        name,
+        placeId,
+        price,
+        rating,
+        types,
+        picture,
+      };
+    }));
+
+    // parse data and cache to db if needed
+
+    res.send({
+      status: 'success',
+      places: places.sort((a, b) => (b.rating - a.rating)),
+    });
+  } catch (error) {
+    console.log(error); //eslint-disable-line
+    res.send(error);
+  }
+});
+
+server.get('/a/:placeid', async (req, res) => {
+  try {
+    const data = await googleMapsClient.place({
+      placeid: req.params.placeid,
+      language: 'en',
+    }).asPromise();
+
+    res.json({
+      status: 'success',
+      data,
+    });
+  } catch (error) {
+    console.log(error); // eslint-disable-line
+    res.status(500).json({
+      status: 'error',
+      error,
+    });
+  }
 });
 
 // Generic / route for initial server online status check

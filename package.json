@@ -7,8 +7,10 @@
     "start": "node index.js",
     "server": "nodemon index.js",
     "test": "cross-env DB_ENV=testing jest --watch --verbose",
-    "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix"
+    "lint:start": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "jest:start": "cross-env DB_ENV=testing jest --verbose",
+    "jest:coverage": "jest --verbose --coverage"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   },
   "homepage": "",
   "dependencies": {
+    "@google/maps": "^0.5.5",
     "axios": "^0.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
