@@ -32,50 +32,48 @@ server.post('/api/auth', decodeToken, authorize, (req, res) => {
   });
 });
 
-/*
-  data.json.results
-*/
 
 server.get('/a', async (req, res) => {
   try {
     // gets a results array of places objects
-    const { json: { results } } = await googleMapsClient.places({
-      query: 'fast food',
+    // query.q should be a city e.g. San Francisco
+    const { json: { results: city } } = await googleMapsClient.places({
+      query: req.query.q,
       language: 'en',
-      location: [-33.865, 151.038],
-      radius: 5000,
-      minprice: 1,
-      maxprice: 4,
-      opennow: true,
-      type: 'restaurant',
     }).asPromise();
 
-    /*
-    [
-      {
+    const { geometry: { location } } = city[0];
+
+    const { json: { results } } = await googleMapsClient.places({
+      query: 'points of interest',
+      location: Object.values(location),
+      language: 'en',
+      radius: 5000,
+    }).asPromise();
+
+    const places = await Promise.all(results.filter(({ photos }) => photos).map(async ({
+      name,
+      place_id: placeId,
+      price_level: price,
+      photos,
+      rating,
+      types,
+    }) => {
+      const picRef = photos[0].photo_reference;
+      const pictureReq = await googleMapsClient.placesPhoto({
+        photoreference: picRef,
+        maxwidth: 400,
+      }).asPromise();
+      const picture = `https://${pictureReq.req.socket.servername}${pictureReq.req.path}`;
+
+      return {
         name,
         placeId,
         price,
         rating,
         types,
         picture,
-      }
-    ]
-
-    */
-
-    const places = results.map(({
-      name,
-      place_id: placeId,
-      price_level: price,
-      rating,
-      types,
-    }) => ({
-      name,
-      placeId,
-      price,
-      rating,
-      types,
+      };
     }));
 
     // parse data and cache to db if needed
@@ -87,29 +85,6 @@ server.get('/a', async (req, res) => {
   } catch (error) {
     console.log(error); //eslint-disable-line
     res.send(error);
-  }
-});
-
-server.get('/b/:ref', async (req, res) => {
-  try {
-    const data = await googleMapsClient.placesPhoto({
-      photoreference: req.params.ref,
-      maxwidth: 400,
-      maxheight: 400,
-    }).asPromise();
-
-    console.log(data.req.socket.servername + data.req.path); //eslint-disable-line
-
-    // path
-    // '/p/AF1QipM0FJW-ckWBkAuFom1z69RvpoJCpgh54BOD3-BC=s1600-w400-h400'
-
-    res.json(data.req);
-  } catch (error) {
-    console.log(`error: ${error}`); //eslint-disable-line
-    res.status(500).json({
-      status: 'error',
-      error,
-    });
   }
 });
 
