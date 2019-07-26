@@ -38,7 +38,8 @@ server.post('/api/auth', decodeToken, authorize, (req, res) => {
 
 server.get('/a', async (req, res) => {
   try {
-    const data = await googleMapsClient.places({
+    // gets a results array of places objects
+    const { json: { results } } = await googleMapsClient.places({
       query: 'fast food',
       language: 'en',
       location: [-33.865, 151.038],
@@ -49,15 +50,66 @@ server.get('/a', async (req, res) => {
       type: 'restaurant',
     }).asPromise();
 
+    /*
+    [
+      {
+        name,
+        placeId,
+        price,
+        rating,
+        types,
+        picture,
+      }
+    ]
+
+    */
+
+    const places = results.map(({
+      name,
+      place_id: placeId,
+      price_level: price,
+      rating,
+      types,
+    }) => ({
+      name,
+      placeId,
+      price,
+      rating,
+      types,
+    }));
+
     // parse data and cache to db if needed
 
     res.send({
       status: 'success',
-      data,
+      places,
     });
   } catch (error) {
     console.log(error); //eslint-disable-line
     res.send(error);
+  }
+});
+
+server.get('/b/:ref', async (req, res) => {
+  try {
+    const data = await googleMapsClient.placesPhoto({
+      photoreference: req.params.ref,
+      maxwidth: 400,
+      maxheight: 400,
+    }).asPromise();
+
+    console.log(data.req.socket.servername + data.req.path); //eslint-disable-line
+
+    // path
+    // '/p/AF1QipM0FJW-ckWBkAuFom1z69RvpoJCpgh54BOD3-BC=s1600-w400-h400'
+
+    res.json(data.req);
+  } catch (error) {
+    console.log(`error: ${error}`); //eslint-disable-line
+    res.status(500).json({
+      status: 'error',
+      error,
+    });
   }
 });
 
