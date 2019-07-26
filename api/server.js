@@ -45,10 +45,9 @@ server.get('/a', async (req, res) => {
     const { geometry: { location } } = city[0];
 
     const { json: { results } } = await googleMapsClient.places({
-      query: 'points of interest',
+      query: 'stuff to do',
       location: Object.values(location),
       language: 'en',
-      radius: 5000,
     }).asPromise();
 
     const places = await Promise.all(results.filter(({ photos }) => photos).map(async ({
@@ -80,7 +79,7 @@ server.get('/a', async (req, res) => {
 
     res.send({
       status: 'success',
-      places,
+      places: places.sort((a, b) => (b.rating - a.rating)),
     });
   } catch (error) {
     console.log(error); //eslint-disable-line
