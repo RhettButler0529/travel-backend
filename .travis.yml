@@ -1,0 +1,27 @@
+language: node_js
+
+node_js:
+  - "stable"
+
+cache:
+  directories:
+    - node_modules
+
+install:
+  - npm install
+
+jobs:
+  include:
+    - stage: staging
+      if: type = pull_request AND branch = staging
+      script:
+        - npm run lint:start
+        - knex migrate:latest --env testing
+        - npm run jest:coverage -- --forceExit
+
+    - stage: production
+      if: type = pull_request AND branch = master
+      script:
+        - npm run lint:start
+        - knex migrate:latest --env testing
+        - npm run jest:coverage -- --forceExit
