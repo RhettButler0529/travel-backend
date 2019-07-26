@@ -7,8 +7,9 @@
     "start": "node index.js",
     "server": "nodemon index.js",
     "test": "cross-env DB_ENV=testing jest --watch --verbose",
-    "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix"
+    "lint:start": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "jest:coverage": "jest --verbose --coverage"
   },
   "repository": {
     "type": "git",
