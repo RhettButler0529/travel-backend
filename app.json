@@ -1,7 +1,6 @@
 {
   "addons": [
     "heroku-postgresql",
-    "heroku-postgresql"
   ],
   "buildpacks": [
     {
@@ -10,6 +9,9 @@
   ],
   "env": {
     "DATABASE_URL": {
+      "required": true
+    },
+    "PLACES_API_KEY": {
       "required": true
     }
   },
