@@ -9,6 +9,7 @@
     "test": "cross-env DB_ENV=testing jest --watch --verbose",
     "lint:start": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
+    "jest:start": "cross-env DB_ENV=testing jest --verbose",
     "jest:coverage": "jest --verbose --coverage"
   },
   "repository": {
