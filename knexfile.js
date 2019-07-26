@@ -36,7 +36,7 @@ module.exports = {
 
   testing: {
     client: 'pg',
-    connection: `${dbConnection}/${tables.test}`,
+    connection: (process.env.CI ? dbConnection : `${dbConnection}/${tables.test}`),
     migrations: {
       directory: './database/migrations',
       tableName: 'knex_migrations',
