@@ -35,9 +35,10 @@ server.post('/api/auth', decodeToken, authorize, (req, res) => {
 /*
   data.json.results
 */
+
 server.get('/a', async (req, res) => {
   try {
-    const { data } = await googleMapsClient.places({
+    const data = await googleMapsClient.places({
       query: 'fast food',
       language: 'en',
       location: [-33.865, 151.038],
@@ -59,6 +60,28 @@ server.get('/a', async (req, res) => {
     res.send(error);
   }
 });
+
+server.get('/a/:placeid', async (req, res) => {
+  try {
+    const data = await googleMapsClient.place({
+      placeid: req.params.placeid,
+      language: 'en',
+    }).asPromise();
+
+    console.log(data);
+
+    res.json({
+      status: 'success',
+      data,
+    });
+  } catch (error) {
+    console.log(error); // eslint-disable-line
+    res.status(500).json({
+      status: 'error',
+      error,
+    });
+  }
+})
 
 // Generic / route for initial server online status check
 const projectName = process.env.PROJECT_NAME || 'test';
