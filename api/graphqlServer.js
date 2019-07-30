@@ -2,7 +2,7 @@ const express = require('express');
 const graphql = require('express-graphql');
 const { buildSchema } = require('graphql');
 
-const userDb = require('../mock/users')(3);
+const userDb = require('../mock/users')(30);
 
 // GraphQL buildSchema
 const schema = buildSchema(`
@@ -15,7 +15,25 @@ const schema = buildSchema(`
       id: String,
       name: String,
       email: String,
+      itineraries: [Itinerary],
     },
+    type Itinerary {
+      id: String,
+      attractions: [Attraction],
+    },
+    type Attraction {
+      id: Int,
+      placeId: String,
+      name: String,
+      description: String,
+      lat: String,
+      lng: String,
+      address: String,
+      phone: String,
+      price: Int,
+      rating: Float,
+      numRatings: Int,
+    }
 `);
 
 const root = {
