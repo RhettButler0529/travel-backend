@@ -7,6 +7,7 @@ const googleMapsClient = require('@google/maps').createClient({
 const configureMiddleware = require('./middleware.js');
 
 const server = express();
+const graphql = require('./graphqlServer');
 const decodeToken = require('./auth/token.js');
 const authorize = require('./auth/login.js');
 
@@ -23,6 +24,7 @@ const usersRouter = require('../users/usersRouter.js');
 // const authRouter = require("../auth/authRouter.js");
 // Router assignments
 server.use('/api/users', usersRouter);
+server.use('/gql', graphql);
 server.post('/api/auth', decodeToken, authorize, (req, res) => {
   // id, token, email, name
   // console.log("req.headers.authorization", req.headers.authorization);
