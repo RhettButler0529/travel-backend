@@ -44,14 +44,10 @@ const root = {
 
 // Create an express server and GraphQL endpoint
 const app = express.Router();
-app.use('/graphql', graphql({
+app.use('/', graphql({
   schema,
   rootValue: root,
   graphiql: true,
 }));
-
-app.get('/test', (req, res) => {
-  res.send('This is a test');
-});
 
 module.exports = app;
