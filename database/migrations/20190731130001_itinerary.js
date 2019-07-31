@@ -1,20 +1,18 @@
-exports.up = knex => {
-  return knex.schema.createTable('itinerary', (table) => {
-    table.increments('id');
-    table.integer('user_id').notNullable()
-      .unsigned()
-      .references('id')
-      .inTable('users')
-      .onDelete('RESTRICT')
-      .onUpdate('CASCADE');
-    table.integer('destination_id').notNullable()
-      .unsigned()
-      .references('id')
-      .inTable('destination')
-      .onDelete('RESTRICT')
-      .onUpdate('CASCADE');
-
-  })
+exports.up = knex => knex.schema.createTable('itinerary', (table) => {
+  table.increments('id');
+  table.integer('user_id').notNullable()
+    .unsigned()
+    .references('id')
+    .inTable('users')
+    .onDelete('RESTRICT')
+    .onUpdate('CASCADE');
+  table.integer('destination_id').notNullable()
+    .unsigned()
+    .references('id')
+    .inTable('destination')
+    .onDelete('RESTRICT')
+    .onUpdate('CASCADE');
+})
   .createTable('attraction', (table) => {
     table.increments('id');
     table.integer('place_id').notNullable().unique();
@@ -42,15 +40,12 @@ exports.up = knex => {
       .references('id')
       .inTable('attraction')
       .onDelete('RESTRICT')
-      .onUpdate('CASCADE')
+      .onUpdate('CASCADE');
     table.datetime('event_time');
-});
-}
+  });
 
 
-exports.down = knex => {
-  return knex.schema
-    .dropTableIfExists('itinerary_attraction')
-    .dropTableIfExists('itinerary')
-    .dropTableIfExists('attraction')
-}
+exports.down = knex => knex.schema
+  .dropTableIfExists('itinerary_attraction')
+  .dropTableIfExists('itinerary')
+  .dropTableIfExists('attraction');
