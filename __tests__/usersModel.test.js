@@ -1,5 +1,5 @@
-const db = require('../database/dbConfig.js');
 const cleaner = require('knex-cleaner');
+const db = require('../database/dbConfig.js');
 
 const {
   find,
