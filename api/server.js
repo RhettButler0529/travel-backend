@@ -75,9 +75,9 @@ server.get('/a', async (req, res) => {
         maxwidth: 400,
       }).asPromise();
 
-      console.log(pictureReq);
+      console.log(pictureReq.connection._host); // eslint-disable-line
 
-      const picture = `https://${pictureReq.client.servername}${pictureReq.req.path}`;
+      const picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
 
       return {
         name,
