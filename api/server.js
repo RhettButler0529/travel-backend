@@ -50,7 +50,7 @@ server.get('/city/image', async (req, res) => {
 
     res.json({
       status: 'success',
-      cityImg: `https://${pictureReq.connection._host}${pictureReq.req.path}`,
+      cityImg: `https://${pictureReq.connection._host}${pictureReq.req.path}`, // eslint-disable-line
     });
   } catch (error) {
     res.status(500).json({
