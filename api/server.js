@@ -34,6 +34,30 @@ server.post('/api/auth', decodeToken, authorize, (req, res) => {
   });
 });
 
+server.get('/city/image', async (req, res) => {
+  try {
+    const { json: { results: city } } = await googleMapsClient.places({
+      query: req.query.q,
+      language: 'en',
+    }).asPromise();
+
+    const cityPhotoReference = city[0].photos[0].photo_reference;
+
+    const pictureReq = await googleMapsClient.placesPhoto({
+      photoreference: cityPhotoReference,
+      maxwidth: 1200,
+    }).asPromise();
+
+    res.json({
+      status: 'success',
+      cityImg: `https://${pictureReq.connection._host}${pictureReq.req.path}`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Unknown Error',
+    });
+  }
+});
 
 server.get('/a', async (req, res) => {
   try {
