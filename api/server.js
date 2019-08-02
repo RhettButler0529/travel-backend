@@ -75,6 +75,8 @@ server.get('/a', async (req, res) => {
         maxwidth: 400,
       }).asPromise();
 
+      console.log(pictureReq);
+
       const picture = `https://${pictureReq.client.servername}${pictureReq.req.path}`;
 
       return {
