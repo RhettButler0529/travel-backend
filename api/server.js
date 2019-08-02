@@ -44,6 +44,15 @@ server.get('/a', async (req, res) => {
       language: 'en',
     }).asPromise();
 
+    const cityPhotoReference = city[0].photos[0].photo_reference;
+
+    const cityReq = await googleMapsClient.placesPhoto({
+      photoreference: cityPhotoReference,
+      maxwidth: 2400,
+    }).asPromise();
+
+    const cityPicture = `https://${cityReq.client.servername}${cityReq.req.path}`;
+
     const { geometry: { location } } = city[0];
 
     const { json: { results } } = await googleMapsClient.places({
@@ -65,7 +74,8 @@ server.get('/a', async (req, res) => {
         photoreference: picRef,
         maxwidth: 400,
       }).asPromise();
-      const picture = `https://${pictureReq.req.socket.servername}${pictureReq.req.path}`;
+
+      const picture = `https://${pictureReq.client.servername}${pictureReq.req.path}`;
 
       return {
         name,
@@ -81,6 +91,7 @@ server.get('/a', async (req, res) => {
 
     res.send({
       status: 'success',
+      cityPicture,
       places: places.sort((a, b) => (b.rating - a.rating)),
     });
   } catch (error) {
