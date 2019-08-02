@@ -51,7 +51,7 @@ server.get('/a', async (req, res) => {
       maxwidth: 2400,
     }).asPromise();
 
-    const cityPicture = `https://${cityReq.client.servername}${cityReq.req.path}`;
+    const cityPicture = `https://${cityReq.connection._host}${cityReq.req.path}`; // eslint-disable-line
 
     const { geometry: { location } } = city[0];
 
