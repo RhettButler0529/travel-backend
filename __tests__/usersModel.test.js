@@ -1,4 +1,6 @@
+const cleaner = require('knex-cleaner');
 const db = require('../database/dbConfig.js');
+
 const {
   find,
   findById,
@@ -9,7 +11,10 @@ const {
 
 describe('users model', () => {
   beforeEach(async () => {
-    await db('users').truncate();
+    await cleaner.clean(db, {
+      mode: 'truncate',
+      ignoreTables: ['knex_migrations', 'knex_migrations_lock'],
+    });
   });
 
   it('should set DB_ENV to testing', () => {
