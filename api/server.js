@@ -96,7 +96,9 @@ server.get('/a', async (req, res) => {
       price_level: price,
       photos,
       rating,
+      opening_hours: openHours,
       types,
+      ...rest
     }) => {
       let picture = '';
 
@@ -117,8 +119,12 @@ server.get('/a', async (req, res) => {
         placeId,
         price,
         rating,
+        openHours,
         types,
         picture,
+        rest: {
+          ...rest,
+        },
       };
     }));
 

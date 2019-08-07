@@ -35,6 +35,7 @@ router.get('/details/:city', mock(cityData), async (req, res) => {
       photos,
       rating,
       types,
+      user_ratings_total: totalRatings,
     }) => {
       let picture = '';
 
@@ -53,6 +54,7 @@ router.get('/details/:city', mock(cityData), async (req, res) => {
         rating,
         types,
         picture,
+        totalRatings,
       };
     }));
 
