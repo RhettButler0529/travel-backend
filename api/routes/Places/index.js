@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const googleMapsClient = require('@google/maps').createClient({
   key: process.env.PLACES_API_KEY,
   Promise,
@@ -6,6 +7,7 @@ const googleMapsClient = require('@google/maps').createClient({
 
 const mock = require('../../middleware/mock');
 const cityData = require('../../../mock/dev/city');
+const infoData = require('../../../mock/dev/info');
 
 const router = express.Router();
 
@@ -67,6 +69,34 @@ router.get('/details/:city', mock(cityData), async (req, res) => {
   } catch (error) {
     console.log(error); //eslint-disable-line
     res.send(error);
+  }
+});
+
+router.get('/info/:attraction', mock(infoData), async (req, res) => {
+  try {
+    const { params } = req;
+    const endpoint = 'https://kgsearch.googleapis.com/v1/entities:search';
+    const { data: { itemListElement } } = await axios.get(endpoint, {
+      params: {
+        query: params.attraction,
+        key: process.env.PLACES_API_KEY,
+        limit: 1,
+        indent: true,
+        types: 'Place',
+      },
+    });
+    const { result: { detailedDescription: { articleBody: description } } } = itemListElement[0];
+    // console.log(info); // eslint-disable-line
+    res.json({
+      status: 'success',
+      description,
+    });
+  } catch (error) {
+    console.log(error); // eslint-disable-line
+    res.status(500).json({
+      status: 'error',
+      message: 'Unknown server error',
+    });
   }
 });
 
