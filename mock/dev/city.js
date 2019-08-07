@@ -1,11 +1,12 @@
 const faker = require('faker');
+const hash = require('../../utils/hash');
 
 const attraction = id => ({
   name: faker.company.companyName(),
   placeId: faker.random.uuid(),
   rating: faker.random.number(50) / 10,
   types: ['point_of_interest', 'establishment'],
-  picture: faker.image.imageUrl(200, 300),
+  picture: `${faker.image.imageUrl(200, 300)}?${hash()}`,
   totalRatings: faker.random.number(10000),
 });
 
