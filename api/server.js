@@ -7,6 +7,7 @@ const googleMapsClient = require('@google/maps').createClient({
 const configureMiddleware = require('./middleware.js');
 
 const server = express();
+const placesRouter = require('./routes/Places');
 const graphql = require('./graphqlServer');
 const decodeToken = require('./auth/token.js');
 const authorize = require('./auth/login.js');
@@ -24,6 +25,7 @@ const usersRouter = require('../users/usersRouter.js');
 // const authRouter = require("../auth/authRouter.js");
 // Router assignments
 server.use('/api/users', usersRouter);
+server.use('/places', placesRouter);
 server.use('/gql', graphql);
 server.post('/api/auth', decodeToken, authorize, (req, res) => {
   // id, token, email, name
@@ -59,6 +61,59 @@ server.get('/city/image', async (req, res) => {
   }
 });
 
+// server.get('/place/details/:city', async (req, res) => {
+//   try {
+//     const { params, headers } = req;
+//     const { json: { results: city } } = await googleMapsClient.places({
+//       query: params.city,
+//       language: 'en',
+//     }).asPromise();
+
+//     const { geometry: { location } } = city[0];
+
+//     const { json: { results: places } } = await googleMapsClient.places({
+//       query: 'stuff to do',
+//       location: Object.values(location),
+//       language: 'en',
+//     }).asPromise();
+
+//     const attractions = await Promise.all(
+//       places.filter(({ photos }) => photos)
+//         .map(async ({
+//           name,
+//           place_id: placeId,
+//           price_level: price,
+//           photos,
+//           rating,
+//           types,
+//         }) => {
+//           if (headers.env === 'production') {
+//             // do the things
+//           }
+
+//           return {
+//             name,
+//             placeId,
+//             price,
+//             rating,
+//             types,
+//             picture
+//           }
+//         });
+//     );
+
+//   } catch (error) {
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Unknown Server Error',
+//       error,
+//     });
+//   }
+// });
+
+/**
+ * DEPRECIATED
+ */
 server.get('/a', async (req, res) => {
   try {
     // gets a results array of places objects
@@ -101,7 +156,7 @@ server.get('/a', async (req, res) => {
           photoreference: picRef,
           maxwidth: 400,
         }).asPromise();
-        
+
         picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
       } else {
         picture = 'https://fakeimg.pl/200x300';
@@ -130,6 +185,9 @@ server.get('/a', async (req, res) => {
   }
 });
 
+/**
+ * DEPRECIATED
+ */
 server.get('/a/:placeid', async (req, res) => {
   try {
     const data = await googleMapsClient.place({
