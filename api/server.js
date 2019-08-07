@@ -7,6 +7,7 @@ const googleMapsClient = require('@google/maps').createClient({
 const configureMiddleware = require('./middleware.js');
 
 const server = express();
+const placesRouter = require('./routes/Places');
 const graphql = require('./graphqlServer');
 const decodeToken = require('./auth/token.js');
 const authorize = require('./auth/login.js');
@@ -24,6 +25,7 @@ const usersRouter = require('../users/usersRouter.js');
 // const authRouter = require("../auth/authRouter.js");
 // Router assignments
 server.use('/api/users', usersRouter);
+server.use('/places', placesRouter);
 server.use('/gql', graphql);
 server.post('/api/auth', decodeToken, authorize, (req, res) => {
   // id, token, email, name
@@ -59,6 +61,9 @@ server.get('/city/image', async (req, res) => {
   }
 });
 
+/**
+ * DEPRECIATED
+ */
 server.get('/a', async (req, res) => {
   try {
     // gets a results array of places objects
@@ -91,25 +96,35 @@ server.get('/a', async (req, res) => {
       price_level: price,
       photos,
       rating,
+      opening_hours: openHours,
       types,
+      ...rest
     }) => {
-      const picRef = photos[0].photo_reference;
-      const pictureReq = await googleMapsClient.placesPhoto({
-        photoreference: picRef,
-        maxwidth: 400,
-      }).asPromise();
+      let picture = '';
 
-      console.log(pictureReq.connection._host); // eslint-disable-line
+      if (req.query.env === 'production') {
+        const picRef = photos[0].photo_reference;
+        const pictureReq = await googleMapsClient.placesPhoto({
+          photoreference: picRef,
+          maxwidth: 400,
+        }).asPromise();
 
-      const picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
+        picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
+      } else {
+        picture = 'https://fakeimg.pl/200x300';
+      }
 
       return {
         name,
         placeId,
         price,
         rating,
+        openHours,
         types,
         picture,
+        rest: {
+          ...rest,
+        },
       };
     }));
 
@@ -126,6 +141,9 @@ server.get('/a', async (req, res) => {
   }
 });
 
+/**
+ * DEPRECIATED
+ */
 server.get('/a/:placeid', async (req, res) => {
   try {
     const data = await googleMapsClient.place({
