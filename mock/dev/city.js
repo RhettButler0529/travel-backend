@@ -1,5 +1,4 @@
 const faker = require('faker');
-const hash = require('../../utils/hash');
 
 const attraction = id => ({
   name: faker.company.companyName(),

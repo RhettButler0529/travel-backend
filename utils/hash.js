@@ -1,5 +1,1 @@
-const hash = () => {
-  return Math.random().toString(36).substr(2);
-};
-
-module.exports = hash;
+module.exports = () => Math.random().toString(36).substr(2);
