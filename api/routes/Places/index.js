@@ -22,11 +22,26 @@ const checkCache = async (req, res, next) => {
     | No => Make findPlace query to get place_id
       | Does response types include 'locality'
         | No => What do? Send Error? Just continue without caching as destination?
+          | Find out what city the attraction is in and save as an alias
         | Yes => Continue
       | Does place_id exist in destination table
         | Yes => Add alias reference to destination
         | No => Add new entry in destination table and alias reference
       | Return long/lat array
+
+      destination
+      | id  | place_id |  name |  lng | lat |
+      | 1  | alskdfj | New York | 000 | 000 |
+      | 2   | lsksdj | San Francisco | 111 | 111 |
+
+      alias
+      | id  | name | destination_id |
+      | 1   | 'New York' | 1  |
+      | 2   | 'New York City' | 1 |
+      | 3   | 'San Fran' | 2
+      | 4   | 'Golden Gate Bridge' | 2
+      | 5   | 'Statue of Liberty' | 1
+
   */
   next();
 };
@@ -42,7 +57,7 @@ router.get('/details/:city', mock(cityData), checkCache, async (req, res) => {
     }).asPromise();
 
     // pulls the longitude/latitude off the first candidate in the response
-    const { geometry: { location }, types: cityTypes, name: cityName } = candidates[0];
+    const { geometry: { location }, name: cityName } = candidates[0];
 
     const { json: { results } } = await googleMapsClient.places({
       query: 'stuff to do',
