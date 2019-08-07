@@ -93,15 +93,19 @@ server.get('/a', async (req, res) => {
       rating,
       types,
     }) => {
-      const picRef = photos[0].photo_reference;
-      const pictureReq = await googleMapsClient.placesPhoto({
-        photoreference: picRef,
-        maxwidth: 400,
-      }).asPromise();
+      let picture = '';
 
-      console.log(pictureReq.connection._host); // eslint-disable-line
-
-      const picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
+      if (req.query.env === 'production') {
+        const picRef = photos[0].photo_reference;
+        const pictureReq = await googleMapsClient.placesPhoto({
+          photoreference: picRef,
+          maxwidth: 400,
+        }).asPromise();
+        
+        picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
+      } else {
+        picture = 'https://fakeimg.pl/200x300';
+      }
 
       return {
         name,
