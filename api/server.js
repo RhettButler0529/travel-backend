@@ -61,56 +61,6 @@ server.get('/city/image', async (req, res) => {
   }
 });
 
-// server.get('/place/details/:city', async (req, res) => {
-//   try {
-//     const { params, headers } = req;
-//     const { json: { results: city } } = await googleMapsClient.places({
-//       query: params.city,
-//       language: 'en',
-//     }).asPromise();
-
-//     const { geometry: { location } } = city[0];
-
-//     const { json: { results: places } } = await googleMapsClient.places({
-//       query: 'stuff to do',
-//       location: Object.values(location),
-//       language: 'en',
-//     }).asPromise();
-
-//     const attractions = await Promise.all(
-//       places.filter(({ photos }) => photos)
-//         .map(async ({
-//           name,
-//           place_id: placeId,
-//           price_level: price,
-//           photos,
-//           rating,
-//           types,
-//         }) => {
-//           if (headers.env === 'production') {
-//             // do the things
-//           }
-
-//           return {
-//             name,
-//             placeId,
-//             price,
-//             rating,
-//             types,
-//             picture
-//           }
-//         });
-//     );
-
-//   } catch (error) {
-//     res.status(500).json({
-//       status: 'error',
-//       message: 'Unknown Server Error',
-//       error,
-//     });
-//   }
-// });
-
 /**
  * DEPRECIATED
  */
