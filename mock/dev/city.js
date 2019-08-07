@@ -5,8 +5,9 @@ const attraction = id => ({
   name: faker.company.companyName(),
   placeId: faker.random.uuid(),
   rating: faker.random.number(50) / 10,
+  price: faker.random.number(4),
   types: ['point_of_interest', 'establishment'],
-  picture: `${faker.image.imageUrl(200, 300)}?${hash()}`,
+  picture: 'https://fakeimg.pl/200x300',
   totalRatings: faker.random.number(10000),
 });
 
