@@ -89,6 +89,26 @@ router.get('/details/:city', mock(cityData), checkCache, async (req, res) => {
 
       picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
 
+      const attraction = await db.getBy({ place_id: placeId });
+      const attractionData = {
+        address,
+        lat: coords.lat,
+        lng: coords.lng,
+        name,
+        place_id: placeId,
+        price: price || 1,
+        rating,
+        phone: '',
+        picture,
+        total_ratings: totalRatings,
+      };
+
+      if (attraction.length) {
+        await db.update(attraction[0].id, attractionData);
+      } else {
+        await db.add(attractionData);
+      }
+
       return {
         address,
         lat: coords.lat,
@@ -143,21 +163,8 @@ router.get('/info/:attraction', mock(infoData), async (req, res) => {
 
 router.get('/test', async (req, res) => {
   try {
-    const result = await db.add({
-      place_id: 1234,
-      name: 'abc',
-      lng: 3.283,
-      lat: 8.287,
-      address: '111 Street Rd.',
-      phone: '123-456-7890',
-      price: 2,
-      rating: 3.4,
-      total_ratings: 2873,
-    });
-    res.json({
-      message: 'success',
-      result,
-    });
+    const result = await db.getBy({ place_id: 'ChIJp3CqeRd-j4ARYI0i8e_kGKY' });
+    res.json(result[0]);
   } catch (error) {
     console.log(error);
     res.status(500).json({

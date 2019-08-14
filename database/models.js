@@ -18,6 +18,18 @@ const update = table => (id, data) => db(table)
   .update(data)
   .then(() => get(table)(id));
 
+const updateIfExists = table => async (id, data) => {
+  const attraction = await getBy(table)({ id });
+
+  if (attraction) {
+    const result = await update(table)(id, data);
+    return result;
+  }
+
+  const result = await add(table)(data);
+  return result;
+};
+
 const remove = table => async (id) => {
   const record = await get(table)(id);
   await db(table)
@@ -31,6 +43,7 @@ module.exports = table => ({
   get: get(table),
   getBy: getBy(table),
   update: update(table),
+  updateIfExists: updateIfExists(table),
   remove: remove(table),
   cb,
 });
