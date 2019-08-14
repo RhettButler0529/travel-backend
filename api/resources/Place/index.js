@@ -66,7 +66,11 @@ router.get('/details/:city', mock(cityData), checkCache, async (req, res) => {
       language: 'en',
     }).asPromise();
 
+    // res.json(results);
+
     const places = await Promise.all(results.filter(({ photos }) => photos).map(async ({
+      formatted_address: address,
+      geometry: { location: coords },
       name,
       place_id: placeId,
       price_level: price,
@@ -86,6 +90,9 @@ router.get('/details/:city', mock(cityData), checkCache, async (req, res) => {
       picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
 
       return {
+        address,
+        lat: coords.lat,
+        lng: coords.lng,
         name,
         placeId,
         price,
