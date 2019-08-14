@@ -1,3 +1,3 @@
-const db = require('../../../database/db.config')('attraction');
+const db = require('../../../database/models')('attraction');
 
 module.exports = db;

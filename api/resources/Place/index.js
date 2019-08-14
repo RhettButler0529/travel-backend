@@ -8,6 +8,7 @@ const googleMapsClient = require('@google/maps').createClient({
 const mock = require('../../middleware/mock');
 const cityData = require('../../../mock/dev/city');
 const infoData = require('../../../mock/dev/info');
+const db = require('./place.model');
 
 const router = express.Router();
 
@@ -129,6 +130,32 @@ router.get('/info/:attraction', mock(infoData), async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: 'Unknown server error',
+    });
+  }
+});
+
+router.get('/test', async (req, res) => {
+  try {
+    const result = await db.add({
+      place_id: 1234,
+      name: 'abc',
+      lng: 3.283,
+      lat: 8.287,
+      address: '111 Street Rd.',
+      phone: '123-456-7890',
+      price: 2,
+      rating: 3.4,
+      total_ratings: 2873,
+    });
+    res.json({
+      message: 'success',
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'fail',
+      error,
     });
   }
 });

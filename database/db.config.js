@@ -1,10 +1,8 @@
-// Import knex dependency and setup knexfile configuration for knex
 const knex = require('knex');
-require('dotenv').config();
+const knexConfig = require('../knexfile.js');
 
-// Knex configuration
-const environment = process.env.DB_ENV || 'development'; // Setup for deployment on heroku
-const knexConfig = require('../knexfile.js')[environment]; // Assignment
+const environment = process.env.DB_ENV || 'development';
 
-// Export new knex configuration
-module.exports = knex(knexConfig);
+const db = knex(knexConfig[environment]);
+
+module.exports = db;
