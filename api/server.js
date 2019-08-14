@@ -58,9 +58,11 @@ server.get('/city/image', async (req, res) => {
 });
 
 // Generic / route for initial server online status check
-const projectName = process.env.PROJECT_NAME || 'test';
+// const projectName = process.env.PROJECT_NAME || 'test';
 server.get('/', (req, res) => {
-  res.send(`The ${projectName} server is up and running!`);
+  res.json({
+    message: 'API is up',
+  });
 });
 
 // Server export to be used in index.js
