@@ -9,12 +9,12 @@ const mock = require('../../middleware/mock');
 const cityData = require('../../../mock/dev/city');
 const infoData = require('../../../mock/dev/info');
 const db = require('./place.model');
+const rawDB = require('../../../database/db.config');
 
 const router = express.Router();
 
 const checkCache = async (req, res, next) => {
   /*
-
     Client sends text query
     Lookup query in alias table
 
@@ -163,13 +163,64 @@ router.get('/info/:attraction', mock(infoData), async (req, res) => {
 
 router.get('/test', async (req, res) => {
   try {
-    const result = await db.getBy({ place_id: 'ChIJp3CqeRd-j4ARYI0i8e_kGKY' });
-    res.json(result[0]);
+    const transactionProvider = rawDB.transactionProvider();
+    const transaction = await transactionProvider();
+    try {
+      const attraction = {
+        address: '1111 Point Lobos Ave, San Francisco, CA 94121, USA',
+        lat: 37.7848836,
+        lng: -122.50751,
+        name: 'lorem ipsum galore',
+        placeId: 'abc123DELETEME',
+        rating: 4.2,
+        types: [
+          'park',
+          'point_of_interest',
+          'establishment',
+        ],
+        picture: 'https://lh3.googleusercontent.com/p/AF1QipMt6Yz2B4IQtJ-95UZW80EXjucYnx7YRMlIn5sJ=s1600-w400',
+        totalRatings: 34245,
+      };
+
+      // insert attraction
+      const attractionId = await transaction('attraction').insert({
+        address: attraction.address,
+        lat: attraction.lat,
+        lng: attraction.lng,
+        price: 3,
+        name: attraction.name,
+        place_id: attraction.placeId,
+        rating: attraction.rating,
+        picture: attraction.picture,
+        total_ratings: attraction.totalRatings,
+        phone: '1234567890',
+      }, 'id');
+
+      // insert types
+      const types = attraction.types.map(name => ({ name }));
+      const typeIds = await transaction('type').insert(types, 'id');
+
+      await Promise.all(typeIds.map(async typeId => transaction('attraction_type').insert({
+        attraction_id: attractionId[0],
+        type_id: typeId,
+      })));
+
+      await transaction.commit();
+
+      res.json({
+        status: 'success',
+        message: 'You did it!',
+        attraction,
+      });
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: 'fail',
       error,
+      emessage: error.message,
     });
   }
 });
