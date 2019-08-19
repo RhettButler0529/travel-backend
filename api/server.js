@@ -24,13 +24,6 @@ server.use('/api/users', usersRouter);
 server.use('/places', places);
 server.use('/gql', graphql);
 
-/*
-
-authenticate: initial token login, update database info
-authorize: 1) Check token isn't expired, 2) check token matches user
-  If token isn't expired but doesn't match ID, re-authorize with google
-*/
-
 server.post('/api/auth', decodeToken, authorize, (req, res) => {
   // id, token, email, name
   res.json({
