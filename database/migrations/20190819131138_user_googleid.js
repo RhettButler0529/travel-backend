@@ -1,5 +1,7 @@
 exports.up = knex => knex.schema.alterTable('user', (table) => {
-  table.string('google_id');
+  table.string('google_id')
+    .notNullable()
+    .unique();
 });
 
 exports.down = knex => knex.schema.alterTable('user', (table) => {
