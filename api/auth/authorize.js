@@ -5,7 +5,7 @@ const User = require('../resources/User/user.model');
 
 const validateToken = async (token) => {
   // get expires and google_id from decoded token
-  const { exp: expires, sub: googleId } = decode.local(token);
+  const { exp: expires, sub: id } = decode.local(token);
 
   const now = (new Date()).getTime();
   if (now > expires) {
@@ -18,9 +18,7 @@ const validateToken = async (token) => {
   }
 
   // check database
-  const user = await User.getBy({
-    google_id: googleId,
-  });
+  const user = await User.getBy({ id });
 
   if (!user) {
     // invalid token
@@ -89,14 +87,14 @@ module.exports = async (req, res, next) => {
     }
 
     const {
-      sub: googleId,
+      sub: id,
       email,
       given_name: first,
       family_name: last,
     } = decode.local(req.headers.authorization);
 
     req.user = {
-      googleId,
+      id,
       email,
       name: `${first} ${last}`,
       token: req.headers.authorization,
