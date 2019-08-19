@@ -7,7 +7,9 @@ const validateToken = async (token) => {
   // get expires and google_id from decoded token
   const { exp: expires, sub: id } = decode.local(token);
 
-  const now = (new Date()).getTime();
+  // Get current epoch time, divide by 1000 and floor to drop last three digits
+  // expire time returned by google is 10 digits, getTime returns 13 for extra granularity
+  const now = Math.floor((new Date()).getTime() / 1000);
   if (now > expires) {
     // expired token
     return {

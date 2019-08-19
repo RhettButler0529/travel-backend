@@ -9,8 +9,8 @@ const configureMiddleware = require('./middleware.js');
 const server = express();
 const places = require('./resources/Place');
 const graphql = require('./graphqlServer');
-const decodeToken = require('./auth/token.js');
-const authorize = require('./auth/login.js');
+const authenticate = require('./auth/authenticate');
+const authorize = require('./auth/authorize');
 
 // Pass server through middleware file
 configureMiddleware(server);
@@ -24,8 +24,15 @@ server.use('/api/users', usersRouter);
 server.use('/places', places);
 server.use('/gql', graphql);
 
-server.post('/api/auth', decodeToken, authorize, (req, res) => {
+server.post('/api/auth', authenticate, (req, res) => {
   // id, token, email, name
+  res.json({
+    message: 'success auth',
+  });
+});
+
+// TODO: Remove this, temp for authorize
+server.get('/api/authorize', authorize, (req, res) => {
   res.json({
     message: 'success auth',
   });
@@ -55,14 +62,6 @@ server.get('/city/image', async (req, res) => {
       message: 'Unknown Error',
     });
   }
-});
-
-const authenticate = require('./auth/authenticate');
-
-server.get('/test', authenticate, (req, res) => {
-  res.json({
-    message: 'passed middleware',
-  });
 });
 
 // Generic / route for initial server online status check
