@@ -3,6 +3,7 @@ const graphql = require('express-graphql');
 const { buildSchema } = require('graphql');
 
 const userDb = require('../mock/users')(30);
+const authorize = require('./auth/authorize');
 
 // GraphQL buildSchema
 const schema = buildSchema(`
@@ -43,28 +44,10 @@ const root = {
   users: () => userDb,
 };
 
-const db = require('../database/models')('user');
-
-const nou = async (req, res, next) => {
-  const users = await db.get();
-  res.json({
-    users,
-    message: 'test',
-  });
-};
-
-// const m = require('../api/auth/token');
-
 // Create an express server and GraphQL endpoint
 const app = express.Router();
 
-app.use('/test', nou, graphql({
-  schema,
-  rootValue: root,
-  graphiql: true,
-}));
-
-app.use('/', graphql({
+app.use('/', authorize, graphql({
   schema,
   rootValue: root,
   graphiql: true,

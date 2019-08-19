@@ -78,7 +78,16 @@ const validateToken = async (token) => {
 
 module.exports = async (req, res, next) => {
   try {
-    const { valid, message, status } = await validateToken(req.headers.authorization);
+    const { authorization: token } = req.headers;
+
+    if (!token) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Missing header authorization token',
+      });
+    }
+
+    const { valid, message, status } = await validateToken(token);
 
     if (!valid) {
       // return unauthorized
@@ -93,13 +102,13 @@ module.exports = async (req, res, next) => {
       email,
       given_name: first,
       family_name: last,
-    } = decode.local(req.headers.authorization);
+    } = decode.local(token);
 
     req.user = {
       id,
       email,
       name: `${first} ${last}`,
-      token: req.headers.authorization,
+      token,
     };
 
     return next();
