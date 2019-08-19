@@ -40,6 +40,8 @@ module.exports = async (req, res, next) => {
     return res.status(500).json({
       status: 'error',
       message: 'Unknown Server Error',
+      token: req.headers.authorization,
+      raw: error,
     });
   }
 };

@@ -57,6 +57,14 @@ server.get('/city/image', async (req, res) => {
   }
 });
 
+const authenticate = require('./auth/authenticate');
+
+server.get('/test', authenticate, (req, res) => {
+  res.json({
+    message: 'passed middleware',
+  });
+});
+
 // Generic / route for initial server online status check
 // const projectName = process.env.PROJECT_NAME || 'test';
 server.get('/', (req, res) => {

@@ -1,3 +1,3 @@
-const db = require('../../../database/db.config')('user');
+const db = require('../../../database/models')('user');
 
 module.exports = db;
