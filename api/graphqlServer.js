@@ -53,12 +53,12 @@ const nou = async (req, res, next) => {
   });
 };
 
-const m = require('../api/auth/token');
+// const m = require('../api/auth/token');
 
 // Create an express server and GraphQL endpoint
 const app = express.Router();
 
-app.use('/test', m, nou, graphql({
+app.use('/test', nou, graphql({
   schema,
   rootValue: root,
   graphiql: true,

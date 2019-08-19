@@ -16,9 +16,8 @@ const authorize = require('./auth/authorize');
 configureMiddleware(server);
 
 // TODO: Clean up usersRouter and /api/users -- we should no longer need these
-const usersRouter = require('../users/usersRouter.js');
-
-server.use('/api/users', usersRouter);
+// const usersRouter = require('../users/usersRouter.js');
+// server.use('/api/users', usersRouter);
 
 // Router assignments
 server.use('/places', places);
