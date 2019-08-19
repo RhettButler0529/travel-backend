@@ -3,5 +3,5 @@ exports.up = knex => knex.schema.alterTable('attraction', (table) => {
 });
 
 exports.down = knex => knex.schema.alterTable('attraction', (table) => {
-  table.integer('picture').alter();
+  table.integer('place_id').alter();
 });
