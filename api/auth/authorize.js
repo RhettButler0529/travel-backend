@@ -1,25 +1,12 @@
-const axios = require('axios');
 const decode = require('./decode');
 require('dotenv').config();
 
-const db = require('../resources/User/user.model');
-/*
-
-authenticate: initial token login, update database info
-authorize: 1) Check token isn't expired, 2) check token matches user
-  If token isn't expired but doesn't match ID, re-authorize with google
-*/
-
-
-// 1. Check token isn't expired (decode)
-// 2. DB Query to see if it matches user
-// 3. Re-authorize
+const User = require('../resources/User/user.model');
 
 const validateToken = async (token) => {
   // get expires and google_id from decoded token
   const { exp: expires, sub: googleId } = decode.local(token);
 
-  // check expiry
   const now = (new Date()).getTime();
   if (now > expires) {
     // expired token
@@ -31,7 +18,7 @@ const validateToken = async (token) => {
   }
 
   // check database
-  const user = await db.getBy({
+  const user = await User.getBy({
     google_id: googleId,
   });
 
@@ -62,7 +49,7 @@ const validateToken = async (token) => {
       }
 
       // valid new token, update database
-      db.update(user.id, {
+      User.update(user.id, {
         token,
       });
     } catch (error) {
@@ -91,49 +78,25 @@ const validateToken = async (token) => {
 
 module.exports = async (req, res, next) => {
   try {
-    const validToken = await validateToken(req.headers.authorization);
+    const { valid, message, status } = await validateToken(req.headers.authorization);
 
-    if (!validToken.valid) {
+    if (!valid) {
       // return unauthorized
+      return res.status(status).json({
+        status: 'error',
+        message,
+      });
     }
 
     const {
       sub: googleId,
-      aud: clientId,
       email,
       given_name: first,
       family_name: last,
     } = decode.local(req.headers.authorization);
 
-    if (clientId !== process.env.OAUTH_GOOGLE_ID) {
-      // invalid oauth client id in token
-      return res.status(400).json({
-        status: 'error',
-        message: 'Invalid Client ID provided',
-      });
-    }
-
-    // const {
-    //   data: {
-    //     sub: id,
-    //     aud,
-    //     email,
-    //     given_name: first,
-    //     family_name: last,
-    //   },
-    // } = await axios
-    //   .get(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${req.headers.authorization}`);
-
-    // validate client id
-    // if (aud !== process.env.OAUTH_GOOGLE_ID) {
-    //   return res.status(401).json({
-    //     status: 'error',
-    //     message: 'Invalid Client ID provided',
-    //   });
-    // }
-
     req.user = {
-      id,
+      googleId,
       email,
       name: `${first} ${last}`,
       token: req.headers.authorization,
@@ -141,27 +104,10 @@ module.exports = async (req, res, next) => {
 
     return next();
   } catch (error) {
-    // catch bad requests
-    if (error.message === 'Request failed with status code 400') {
-      return res.status(400).json({
-        status: 'error',
-        message: error.message,
-      });
-    }
-
-    // catch bad auth (expired token)
-    if (error.message === 'Request failed with a status code 401') {
-      return res.status(401).json({
-        status: 'error',
-        message: error.message,
-      });
-    }
-
     // default error catch
     return res.status(500).json({
       status: 'error',
       message: 'Unknown Server Error',
-      raw: error,
     });
   }
 };

@@ -1,3 +1,4 @@
+/* DEPRECIATED */
 const User = require('../../users/userModel');
 
 module.exports = async (req, res, next) => {
