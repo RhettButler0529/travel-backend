@@ -36,14 +36,34 @@ const schema = buildSchema(`
     }
 `);
 
+// resolvers
 const root = {
   message: () => 'Hello World',
   user: ({ id }) => userDb.find(user => user.id === id),
   users: () => userDb,
 };
 
+const db = require('../database/models')('user');
+
+const nou = async (req, res, next) => {
+  const users = await db.get();
+  res.json({
+    users,
+    message: 'test',
+  });
+};
+
+const m = require('../api/auth/token');
+
 // Create an express server and GraphQL endpoint
 const app = express.Router();
+
+app.use('/test', m, nou, graphql({
+  schema,
+  rootValue: root,
+  graphiql: true,
+}));
+
 app.use('/', graphql({
   schema,
   rootValue: root,
