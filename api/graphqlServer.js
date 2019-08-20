@@ -3,15 +3,18 @@ const graphql = require('express-graphql');
 const { buildSchema } = require('graphql');
 
 const userDb = require('../mock/users')(30);
-const UserFavorite = require('../database/models')('user_favorite');
+const UserFavorite = require('./resources/UserFavorite/user_favorite.model');
+const User = require('../database/models')('user');
+const Attraction = require('../database/models')('attraction');
 const authorize = require('./auth/authorize');
 
 // GraphQL buildSchema
 const schema = buildSchema(`
     type Query  {
         message: String,
-        user(id: String!): User,
-        users: [User]
+        user: User,
+        favorites: [Favorite],
+        users: [User],
     },
     type Mutation {
       addFavorite(id: Int!): Favorite,
@@ -26,7 +29,6 @@ const schema = buildSchema(`
       id: String,
       name: String,
       email: String,
-      itineraries: [Itinerary],
     },
     type Itinerary {
       id: String,
@@ -50,8 +52,15 @@ const schema = buildSchema(`
 // resolvers
 const root = req => ({
   message: () => 'Hello World',
-  user: ({ id }) => userDb.find(user => user.id === id),
+  // user: ({ id }) => userDb.find(user => user.id === id),
+  user: () => User.get(req.user.id),
   users: () => userDb,
+  favorites: async () => {
+    const favorites = await UserFavorite.getAttractions(req.user.id);
+    console.log(favorites);
+    // special table shit
+    return [];
+  },
   addFavorite: async ({ id }) => UserFavorite.add({
     user_id: req.user.id,
     attraction_id: id,
