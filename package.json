@@ -10,7 +10,8 @@
     "lint:start": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
     "jest:start": "cross-env DB_ENV=testing jest --verbose",
-    "jest:coverage": "jest --verbose --coverage"
+    "jest:coverage": "jest --verbose --coverage",
+    "heroku-postbuild": "knex migrate:latest"
   },
   "repository": {
     "type": "git",
