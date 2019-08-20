@@ -5,7 +5,6 @@ const { buildSchema } = require('graphql');
 const userDb = require('../mock/users')(30);
 const UserFavorite = require('./resources/UserFavorite/user_favorite.model');
 const User = require('../database/models')('user');
-const Attraction = require('../database/models')('attraction');
 const authorize = require('./auth/authorize');
 
 // GraphQL buildSchema
@@ -62,7 +61,7 @@ const root = req => ({
   }, ['id', 'user_id', 'attraction_id']),
   removeFavorite: async ({ id }) => {
     // check that we're not trying to remove a different users favorites
-    const { user_id: userId } = await UserFavorite.getBy({ place_id: id });
+    const { user_id: userId } = await UserFavorite.getBy({ id });
     if (userId === req.user.id) {
       return UserFavorite.remove(id);
     }
