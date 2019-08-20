@@ -1,4 +1,4 @@
-const db = require('../database/dbConfig.js');
+const db = require('../database/db.config.js');
 
 function find() {
   return db('user');

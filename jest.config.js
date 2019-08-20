@@ -46,7 +46,7 @@ module.exports = {
   // dependencyExtractor: null,
 
   // A display name to be printed alongside the test while it is running
-  displayName: 'Express-REST-Postgres',
+  displayName: 'Roamly',
 
   // Make calling deprecated APIs throw helpful error messages
   // errorOnDeprecated: false,
@@ -147,9 +147,10 @@ module.exports = {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  // testPathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/__tests__/*',
+  ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
@@ -158,7 +159,7 @@ module.exports = {
   // testResultsProcessor: null,
 
   // This option allows use of a custom test runner
-  // testRunner: "jasmine2",
+  testRunner: 'jest-circus/runner',
 
   // This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
   // testURL: "http://localhost",

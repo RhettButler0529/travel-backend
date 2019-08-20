@@ -8,12 +8,13 @@ const googleMapsClient = require('@google/maps').createClient({
 const mock = require('../../middleware/mock');
 const cityData = require('../../../mock/dev/city');
 const infoData = require('../../../mock/dev/info');
+const db = require('./place.model');
+const rawDB = require('../../../database/db.config');
 
 const router = express.Router();
 
 const checkCache = async (req, res, next) => {
   /*
-
     Client sends text query
     Lookup query in alias table
 
@@ -65,7 +66,11 @@ router.get('/details/:city', mock(cityData), checkCache, async (req, res) => {
       language: 'en',
     }).asPromise();
 
+    // res.json(results);
+
     const places = await Promise.all(results.filter(({ photos }) => photos).map(async ({
+      formatted_address: address,
+      geometry: { location: coords },
       name,
       place_id: placeId,
       price_level: price,
@@ -84,7 +89,30 @@ router.get('/details/:city', mock(cityData), checkCache, async (req, res) => {
 
       picture = `https://${pictureReq.connection._host}${pictureReq.req.path}`; // eslint-disable-line
 
+      const attraction = await db.getBy({ place_id: placeId });
+      const attractionData = {
+        address,
+        lat: coords.lat,
+        lng: coords.lng,
+        name,
+        place_id: placeId,
+        price: price || 1,
+        rating,
+        phone: '',
+        picture,
+        total_ratings: totalRatings,
+      };
+
+      if (attraction.length) {
+        await db.update(attraction[0].id, attractionData);
+      } else {
+        await db.add(attractionData);
+      }
+
       return {
+        address,
+        lat: coords.lat,
+        lng: coords.lng,
         name,
         placeId,
         price,
@@ -129,6 +157,71 @@ router.get('/info/:attraction', mock(infoData), async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: 'Unknown server error',
+    });
+  }
+});
+
+// attraction types example
+router.get('/test', async (req, res) => {
+  try {
+    const transactionProvider = rawDB.transactionProvider();
+    const transaction = await transactionProvider();
+    try {
+      const attraction = {
+        address: '1111 Point Lobos Ave, San Francisco, CA 94121, USA',
+        lat: 37.7848836,
+        lng: -122.50751,
+        name: 'lorem ipsum galore',
+        placeId: 'abc123DELETEME',
+        rating: 4.2,
+        types: [
+          'park',
+          'point_of_interest',
+          'establishment',
+        ],
+        picture: 'https://lh3.googleusercontent.com/p/AF1QipMt6Yz2B4IQtJ-95UZW80EXjucYnx7YRMlIn5sJ=s1600-w400',
+        totalRatings: 34245,
+      };
+
+      // insert attraction
+      const attractionId = await transaction('attraction').insert({
+        address: attraction.address,
+        lat: attraction.lat,
+        lng: attraction.lng,
+        price: 3,
+        name: attraction.name,
+        place_id: attraction.placeId,
+        rating: attraction.rating,
+        picture: attraction.picture,
+        total_ratings: attraction.totalRatings,
+        phone: '1234567890',
+      }, 'id');
+
+      // insert types
+      const types = attraction.types.map(name => ({ name }));
+      const typeIds = await transaction('type').insert(types, 'id');
+
+      await Promise.all(typeIds.map(async typeId => transaction('attraction_type').insert({
+        attraction_id: attractionId[0],
+        type_id: typeId,
+      })));
+
+      await transaction.commit();
+
+      res.json({
+        status: 'success',
+        message: 'You did it!',
+        attraction,
+      });
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: 'fail',
+      error,
+      emessage: error.message,
     });
   }
 });
