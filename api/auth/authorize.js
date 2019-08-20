@@ -49,7 +49,7 @@ const validateToken = async (token) => {
       }
 
       // valid new token, update database
-      User.update(user.id, {
+      await User.update(id, {
         token,
       });
     } catch (error) {
