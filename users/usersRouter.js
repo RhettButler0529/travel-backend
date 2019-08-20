@@ -1,3 +1,5 @@
+/* DEPRECIATE */
+/* eslint-disable */
 const express = require('express');
 const passport = require('passport');
 const User = require('./userModel.js');

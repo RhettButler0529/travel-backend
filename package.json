@@ -10,7 +10,8 @@
     "lint:start": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
     "jest:start": "cross-env DB_ENV=testing jest --verbose",
-    "jest:coverage": "jest --verbose --coverage"
+    "jest:coverage": "jest --verbose --coverage",
+    "heroku-postbuild": "knex migrate:latest"
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,8 @@
     "faker": "^4.1.0",
     "graphql": "^14.4.2",
     "helmet": "^3.18.0",
-    "knex": "^0.16.5",
+    "jwt-decode": "^2.2.0",
+    "knex": "^0.19.1",
     "knex-cleaner": "^1.1.4",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
@@ -45,6 +47,7 @@
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.1",
     "jest": "^24.8.0",
+    "jest-circus": "^24.8.0",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2"
   }

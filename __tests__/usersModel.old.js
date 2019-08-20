@@ -1,5 +1,5 @@
 const cleaner = require('knex-cleaner');
-const db = require('../database/dbConfig.js');
+const db = require('../database/db.config');
 
 const {
   find,
@@ -7,7 +7,7 @@ const {
   insert,
   remove,
   update,
-} = require('../users/usersModel.js');
+} = require('../users/userModel.js');
 
 describe('users model', () => {
   beforeEach(async () => {
@@ -23,7 +23,7 @@ describe('users model', () => {
 
   describe('.find()', () => {
     it('should retrieve users successfully from the database', async () => {
-      await insert({ username: 'dude' });
+      await insert({ name: 'dude' });
       const users = await find();
       expect(users).toHaveLength(1);
     });
@@ -36,9 +36,9 @@ describe('users model', () => {
 
   describe('.findById()', () => {
     it('should retrieve a user by ID successfully from the database', async () => {
-      await insert({ username: 'nate' });
+      await insert({ name: 'nate' });
       const user = await findById(1);
-      expect(user.username).toBe('nate');
+      expect(user.name).toBe('nate');
     });
 
     it('should fail when that user cannot be found in the database', async () => {
