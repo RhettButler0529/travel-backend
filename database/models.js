@@ -9,8 +9,9 @@ const getBy = table => filter => db(table).where(filter);
 
 const cb = method => method(db);
 
-const add = table => data => db(table)
-  .insert(data, ['id', 'user_id', 'attraction_id'])
+// TODO: returning is optional here, passing undefined to insert should be fine
+const add = table => (data, returning) => db(table)
+  .insert(data, returning)
   .then(ids => ids[0]);
 
 const update = table => (id, data) => db(table)
