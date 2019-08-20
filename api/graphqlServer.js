@@ -61,7 +61,7 @@ const root = req => ({
   }, ['id', 'user_id', 'attraction_id']),
   removeFavorite: async ({ id }) => {
     // check that we're not trying to remove a different users favorites
-    const { user_id: userId } = await UserFavorite.getBy({ id });
+    const { user_id: userId } = await UserFavorite.get(id);
     if (userId === req.user.id) {
       return UserFavorite.remove(id);
     }
