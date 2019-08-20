@@ -13,7 +13,7 @@ const schema = buildSchema(`
     type Query  {
         message: String,
         user: User,
-        favorites: [Favorite],
+        favorites: [Attraction],
         users: [User],
     },
     type Mutation {
@@ -36,7 +36,7 @@ const schema = buildSchema(`
     },
     type Attraction {
       id: Int,
-      placeId: String,
+      place_id: String,
       name: String,
       description: String,
       lat: String,
@@ -45,7 +45,7 @@ const schema = buildSchema(`
       phone: String,
       price: Int,
       rating: Float,
-      numRatings: Int,
+      total_ratings: Int,
     },
 `);
 
@@ -55,12 +55,7 @@ const root = req => ({
   // user: ({ id }) => userDb.find(user => user.id === id),
   user: () => User.get(req.user.id),
   users: () => userDb,
-  favorites: async () => {
-    const favorites = await UserFavorite.getAttractions(req.user.id);
-    console.log(favorites);
-    // special table shit
-    return [];
-  },
+  favorites: async () => UserFavorite.getAttractions(req.user.id),
   addFavorite: async ({ id }) => UserFavorite.add({
     user_id: req.user.id,
     attraction_id: id,
