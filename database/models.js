@@ -10,8 +10,8 @@ const getBy = table => filter => db(table).where(filter);
 const cb = method => method(db);
 
 const add = table => data => db(table)
-  .insert(data)
-  .then(ids => get(table)(ids[0]));
+  .insert(data, ['id', 'user_id', 'attraction_id'])
+  .then(ids => ids[0]);
 
 const update = table => (id, data) => db(table)
   .where({ id })
