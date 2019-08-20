@@ -17,7 +17,7 @@ const schema = buildSchema(`
         users: [User],
     },
     type Mutation {
-      addFavorite(id: Int!): Favorite,
+      addFavorite(id: String!): Favorite,
       removeFavorite(id: Int!): Favorite,
     },
     type Favorite {
@@ -58,11 +58,11 @@ const root = req => ({
   favorites: async () => UserFavorite.getAttractions(req.user.id),
   addFavorite: async ({ id }) => UserFavorite.add({
     user_id: req.user.id,
-    attraction_id: id,
+    attraction_id: await UserFavorite.getAttractionId(id),
   }, ['id', 'user_id', 'attraction_id']),
   removeFavorite: async ({ id }) => {
     // check that we're not trying to remove a different users favorites
-    const { user_id: userId } = await UserFavorite.get(id);
+    const { user_id: userId } = await UserFavorite.getBy({ place_id: id });
     if (userId === req.user.id) {
       return UserFavorite.remove(id);
     }

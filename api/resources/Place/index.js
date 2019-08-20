@@ -161,6 +161,7 @@ router.get('/info/:attraction', mock(infoData), async (req, res) => {
   }
 });
 
+// attraction types example
 router.get('/test', async (req, res) => {
   try {
     const transactionProvider = rawDB.transactionProvider();
