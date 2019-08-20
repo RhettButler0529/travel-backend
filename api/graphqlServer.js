@@ -63,7 +63,10 @@ const root = req => ({
   }),
   user: ({ id }) => userDb.find(user => user.id === id),
   users: () => userDb,
-  addFavorite: async () => UserFavorite.add({ user_id: req.user.id, attraction_id: 1 }),
+  addFavorite: async () => UserFavorite.add({
+    user_id: 105400056097429390573,
+    attraction_id: 60,
+  }),
 });
 
 // Create an express router and GraphQL endpoint
