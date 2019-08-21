@@ -45,6 +45,7 @@ const schema = buildSchema(`
       price: Int,
       rating: Float,
       total_ratings: Int,
+      picture: String,
     },
 `);
 
@@ -55,10 +56,15 @@ const root = req => ({
   user: () => User.get(req.user.id),
   users: () => userDb,
   favorites: async () => UserFavorite.getAttractions(req.user.id),
-  addFavorite: async ({ id }) => UserFavorite.add({
-    user_id: req.user.id,
-    attraction_id: await UserFavorite.getAttractionId(id),
-  }, ['id', 'user_id', 'attraction_id']),
+  addFavorite: async ({ id }) => {
+    const attractionId = await UserFavorite.getAttractionId(id); console.log('attractionId', attractionId)
+    const exists = await UserFavorite.getBy({ user_id: req.user.id, attraction_id: attractionId }); console.log('exists', exists)
+    if (exists.length) return exists[0];
+    return UserFavorite.add({
+      user_id: req.user.id,
+      attraction_id: attractionId,
+    }, ['id', 'user_id', 'attraction_id']);
+  },
   removeFavorite: async ({ id }) => {
     // check that we're not trying to remove a different users favorites
     const { user_id: userId } = await UserFavorite.get(id);
