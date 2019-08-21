@@ -57,8 +57,8 @@ const root = req => ({
   users: () => userDb,
   favorites: async () => UserFavorite.getAttractions(req.user.id),
   addFavorite: async ({ id }) => {
-    const attractionId = await UserFavorite.getAttractionId(id); console.log('attractionId', attractionId)
-    const exists = await UserFavorite.getBy({ user_id: req.user.id, attraction_id: attractionId }); console.log('exists', exists)
+    const attractionId = await UserFavorite.getAttractionId(id);
+    const exists = await UserFavorite.getBy({ user_id: req.user.id, attraction_id: attractionId });
     if (exists.length) return exists[0];
     return UserFavorite.add({
       user_id: req.user.id,
