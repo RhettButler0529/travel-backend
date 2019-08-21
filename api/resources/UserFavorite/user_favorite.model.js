@@ -14,8 +14,11 @@ const getAttractionId = placeId => UserFavorite.cb(async (db) => {
   return attraction.id;
 });
 
+const getAttraction = id => UserFavorite.cb(async db => db('attraction').where({ id }).first());
+
 module.exports = {
   ...UserFavorite,
   getAttractions,
   getAttractionId,
+  getAttraction,
 };
