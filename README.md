@@ -1,10 +1,12 @@
 # API Documentation
 
-#### Backend delpoyed at [Heroku](http://roamly.herokuapp.com)
+#### Backend deployed at [Heroku](http://roamly.herokuapp.com)
 
 ## Getting started
 
 To get the server running locally:
+
+**NOTE:** You will need an instance of Postgres running locally.
 
 - **git clone https://github.com/labs14-travel-website/backend.git** - Clone the repository
 - **cd backend** - Change to the cloned directory
