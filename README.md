@@ -14,16 +14,12 @@ To get the server running locally:
 
 ### Backend built with Node.js and Express
 
-🚫 Why did you choose this framework?
+- Easy to learn
+- Scalable
+- Benefit of fullstack JS
+- Fast / High Performance
 
--    Point One
--    Point Two
--    Point Three
--    Point Four
-
-## 2️⃣ Endpoints
-
-🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
+## Endpoints
 
 #### Organization Routes
 
