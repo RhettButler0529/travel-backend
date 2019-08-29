@@ -73,29 +73,18 @@ To get the server running locally:
 
 ## Actions
 
-🚫 This is an example, replace this with the actions that pertain to your backend
+##### Global
 
-`getOrgs()` -> Returns all organizations
+`get([id])` -> Gets all records if no id is provided, otherwise gets the record for specified id.
+`add(data, [returning])` -> Adds a record to the database, can optionally specify returned columns.
+`update(id, data)` -> Updates a record for the provided id with the provided data.
+`remove(id)` -> Removes record with the specified id.
+`cb(method)` -> Executes a provided callback with the raw db connection passed as an argument.
 
-`getOrg(orgId)` -> Returns a single organization by ID
+##### User Favorites
 
-`addOrg(org)` -> Returns the created org
-
-`updateOrg(orgId)` -> Update an organization by ID
-
-`deleteOrg(orgId)` -> Delete an organization by ID
-<br>
-<br>
-<br>
-`getUsers(orgId)` -> if no param all users
-
-`getUser(userId)` -> Returns a single user by user ID
-
-`addUser(user object)` --> Creates a new user and returns that user. Also creates 7 availabilities defaulted to hours of operation for their organization.
-
-`updateUser(userId, changes object)` -> Updates a single user by ID.
-
-`deleteUser(userId)` -> deletes everything dependent on the user
+`getAttractions(id)` -> Gets attraction data for a specified user_favorite record.
+`getAttractionId(placeId)` -> Gets an attraction's record id for a specified placeId.
 
 ## 3️⃣ Environment Variables
 
