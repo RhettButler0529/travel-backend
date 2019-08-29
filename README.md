@@ -21,24 +21,24 @@ To get the server running locally:
 
 ## Endpoints
 
-#### Organization Routes
+#### Authorization Route
 
-| Method | Endpoint                | Access Control | Description                                  |
-| ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |
+| Method | Endpoint                | Access Control | Description                                |
+| ------ | ----------------------- | -------------- | ------------------------------------------ |
+| POST   | `/api/auth`             | all users      | Takes an auth token and verifies identity. |
 
-#### User Routes
+### Places Routes
 
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/users/current`        | all users           | Returns info for the logged in user.               |
-| GET    | `/users/org/:userId`    | owners, supervisors | Returns all users for an organization.             |
-| GET    | `/users/:userId`        | owners, supervisors | Returns info for a single user.                    |
-| POST   | `/users/register/owner` | none                | Creates a new user as owner of a new organization. |
-| PUT    | `/users/:userId`        | owners, supervisors |                                                    |
-| DELETE | `/users/:userId`        | owners, supervisors |                                                    |
+| Method | Endpoint                | Access Control | Description                                     |
+| ------ | ----------------------- | -------------- | ----------------------------------------------- |
+| GET    | `/details/:city`        | all users      | Gets details for a specific city.               |
+| GET    | `/info/:attraction`     | all users      | Gets description information for an attraction. |
+
+#### GraphQL Route
+
+| Method | Endpoint                | Access Control | Description                                |
+| ------ | ----------------------- | -------------- | ------------------------------------------ |
+| GET    | `/gql`                  | authed users   | GraphQL endpoint to get attraction details, requires auth token in header |
 
 # Data Model
 
