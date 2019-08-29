@@ -42,44 +42,36 @@ To get the server running locally:
 
 # Data Model
 
-🚫This is just an example. Replace this with your data model
-
-#### 2️⃣ ORGANIZATIONS
+#### GraphQL Resources
 
 ---
 
 ```
 {
-  id: UUID
-  name: STRING
-  industry: STRING
-  paid: BOOLEAN
-  customer_id: STRING
-  subscription_id: STRING
+  type Query  {
+        message: String,
+        user: User,
+        favorites: [Attraction],
+        users: [User],
+    },
+    type Mutation {
+      addFavorite(id: String!): Attraction,
+      removeFavorite(id: Int!): Favorite,
+    },
+    type Favorite {
+      id: Int,
+      user_id: String,
+      attraction_id: Int,
+    },
+    type User {
+      id: String,
+      name: String,
+      email: String,
+    },
 }
 ```
 
-#### USERS
-
----
-
-```
-{
-  id: UUID
-  organization_id: UUID foreign key in ORGANIZATIONS table
-  first_name: STRING
-  last_name: STRING
-  role: STRING [ 'owner', 'supervisor', 'employee' ]
-  email: STRING
-  phone: STRING
-  cal_visit: BOOLEAN
-  emp_visit: BOOLEAN
-  emailpref: BOOLEAN
-  phonepref: BOOLEAN
-}
-```
-
-## 2️⃣ Actions
+## Actions
 
 🚫 This is an example, replace this with the actions that pertain to your backend
 
