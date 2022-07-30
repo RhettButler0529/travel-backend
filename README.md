@@ -8,7 +8,7 @@ To get the server running locally:
 
 **NOTE:** You will need an instance of Postgres running locally.
 
-- **git clone https://github.com/labs14-travel-website/backend.git** - Clone the repository
+- **git clone https://github.com/ernestpapyan/travel-backend.git** - Clone the repository
 - **cd backend** - Change to the cloned directory
 - **yarn install** - Install all required dependencies
 - **yarn server** - Start the local server
